@@ -15,6 +15,22 @@ from django.core import serializers
 def login(request):
 	return render(request, 'account/login.html');
 
-@require_http_methods(['GET','POST'])
+@require_POST
 def google_auth(request):
-	pass
+	id_token = request.POST.get('idtoken','')
+	#for using the tokeninfo endpoint.
+	# context = {
+	# 	'id_token' = id_token,
+	# }
+    #return render(request,'account/veriy_id_token.html',context);
+	try:
+		idinfo = client.verify_id_token(id_token,'433666279275-pba1entmia413ubj9ol6mpl2aknv703q.apps.googleusercontent.com')
+    # If multiple clients access the backend server:	
+		if (idinfo['aud'] != 433666279275-pba1entmia413ubj9ol6mpl2aknv703q):
+			raise crypt.AppIdentityError("Unrecognized client.")
+		if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+			raise crypt.AppIdentityError("Wrong issuer.")
+	except:
+		crypt.AppIdentityError;
+    # Invalid token
+	userid = idinfo['sub']

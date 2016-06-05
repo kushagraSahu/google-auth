@@ -10,31 +10,27 @@
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </main>
     <script>
-    gapi.load('auth2', function(){
-        gapi.auth2.init();
-    });
-    function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
         console.log('Name: ' + profile.getName());
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail());
         var id_token = googleUser.getAuthResponse().id_token;
-        $.ajax({
-            url: 'http://127.0.0.1:8000/account/google-auth',
-            method: 'POST',
-            headers : {
-                'Content-Type' : 'application/x-www-form-urlencoded',
-            },
-            data: {
-                'id_token': id_token,
-            },
-            dataType: 'json',
-            success: function (response){
-                
-            }
-        });
-    }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://127.0.0.1:8000/account/google-auth',true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('idtoken=' + id_token);
+    2}
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+  });
+}
 </script>
 </body>
 </html>
