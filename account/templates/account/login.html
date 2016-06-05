@@ -1,0 +1,42 @@
+<html>
+<head>
+    <meta name="google-signin-client_id" content="433666279275-pba1entmia413ubj9ol6mpl2aknv703q.apps.googleusercontent.com">
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <main class="container">
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </main>
+    <script>
+    gapi.load('auth2', function(){
+        gapi.auth2.init();
+    });
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+        var id_token = googleUser.getAuthResponse().id_token;
+        $.ajax({
+            url: 'http://127.0.0.1:8000/account/google-auth',
+            method: 'POST',
+            headers : {
+                'Content-Type' : 'application/x-www-form-urlencoded',
+            },
+            data: {
+                'id_token': id_token,
+            },
+            dataType: 'json',
+            success: function (response){
+                
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
+
