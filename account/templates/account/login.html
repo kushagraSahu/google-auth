@@ -36,19 +36,19 @@
             var profile = googleUser.getBasicProfile();
             var id_token = googleUser.getAuthResponse().id_token;
             console.log('hi2');
-            // $.ajax({
-            //     url: 'http://localhost:8000/account/google-auth/',
-            //     method : 'POST',
-            //     data : {
-            //         'idtoken' : id_token,
-            //     },
-            //     datatype : 'json',
-            //     headers : {'X-CSRFToken':getCookie('csrftoken')},
-            // })
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST','http://localhost:8000/account/google-auth/',true);
-            xhr.setRequestHeader('X-CSRFToken', getCookie("csrftoken"));
-            xhr.send('idtoken=' +id_token);
+            $.ajax({
+                url: 'http://localhost:8000/account/google-auth/',
+                method : 'POST',
+                data : {
+                    'idtoken' : id_token,
+                },
+                datatype : 'json',
+                headers : {'X-CSRFToken':getCookie('csrftoken')},
+            })
+            // var xhr = new XMLHttpRequest();
+            // xhr.open('POST','http://localhost:8000/account/google-auth/',true);
+            // xhr.setRequestHeader('X-CSRFToken', getCookie("csrftoken"));
+            // xhr.send('idtoken=' +id_token);
         }
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
