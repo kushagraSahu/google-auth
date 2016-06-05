@@ -134,3 +134,8 @@ EMAIL_HOST_USER = 'kushagrasahu.ed@gmail.com'
 EMAIL_HOST_PASSWORD = 'ojmqfpyfjjnkgflh'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+GOOGLE_OAUTH2_CLIENT_ID = '433666279275-pba1entmia413ubj9ol6mpl2aknv703q.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'dAVmyBbw3xaj1rj0Q5K2CCCC'
+
+GOOGLE_OAUTH2_USE_UNIQUE_USER_ID = True

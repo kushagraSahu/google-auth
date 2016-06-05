@@ -1,17 +1,39 @@
 {% load staticfiles %}
 <html>
 <body>
+	<div id = 'id_token'>{{ id_token }}</div>
+	<style>
+		#id_token{
+			display: none;
+		}
+	</style>
 	<script>
 		var info = {};
+		console.log('reached 1');
+		var id_token = $('#id_token').innerHTML;
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + {{ id_token }},true);
+		xhr.open('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + id_token,true);
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.send();
+		console.log('reached 2');
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				info = xhttp.responseText;
-			}
-		};
-	</script>
-</body>
-</html>
+				$.ajax({
+					url: 'http://localhost:8000/account/google-login/',
+					method: 'POST',
+					data: {
+						'info' = info,
+					},
+					dataType: 'json',
+					success: function (response){
+
+					}
+					error: function (error){
+
+					}
+				});
+
+			</script>
+		</body>
+		</html>
