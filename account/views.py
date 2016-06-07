@@ -11,6 +11,7 @@ from django.conf import settings
 from django.template import loader
 from django.core import serializers
 from google_auth.settings import GOOGLE_OAUTH2_CLIENT_ID
+import json
 # Create your views here.
 
 @csrf_exempt
@@ -22,16 +23,22 @@ def login(request):
 def google_auth(request):
 	id_token = request.POST.get('idtoken','')
 	print(id_token)
-	return render(request,'account/verify_id_token.html',{'id_token' : id_token});
+	return render(request,'account/logged_in.html');
 
 @csrf_exempt
 @require_POST
 def google_login(request):
-	info = request.POST.get('info','')
-	print("hi")
+	info_str = request.POST.get('info','')
+	import json
+	json_acceptable_string = info_str.replace("'", "\"")
+	info = json.loads(json_acceptable_string)
+	print("//////////////////////////////////////////////////  \n ")
+	print(info)
+	print(" \n ")
 	userID = info['sub']
 	email = info['email']
 	user = MyUser.objects.filter(email = email)
+	user.is_active = info['email_verified']
 	if user:
 		#if info['aud'] == GOOGLE_OAUTH2_CLIENT_ID:
 			if info['iss'] in ['accounts.google.com', 'https://accounts.google.com']:
@@ -53,11 +60,14 @@ def google_login(request):
 		print("/////" + password + "/////")
 		user = MyUser.objects.create(username = username, first_name = firstname, last_name = lastname, email = email)
 		user.set_password(password)
-		user.is_active = info['email_verified']
 		user.save()
+		user.backend='django.contrib.auth.backends.ModelBackend'
 		auth_login(request,user)
 
-	return HttpResponse('Ok!')
+	response = {
+		'user' : user,
+	}	
+	return response
 
 
 
